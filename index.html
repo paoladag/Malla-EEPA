@@ -73,10 +73,12 @@
     .info-box p {
       margin: 0 0 0.75em 0;
     }
+    /* Cambiado para filas de 3 columnas */
     .main-container {
       display: grid;
-      grid-template-columns: repeat(10, minmax(250px, 1fr));
-      grid-gap: 30px;
+      grid-template-columns: repeat(3, minmax(250px, 1fr));
+      grid-auto-rows: auto;
+      grid-gap: 30px 30px;
       max-width: 1280px;
       margin: 0 auto 35px auto;
       padding: 0 10px;
@@ -273,13 +275,12 @@
   <!-- Cuadro blanco con instrucción entre header y columnas -->
   <div class="info-box">
     <p><strong>¿Cómo usarla?</strong></p>
-    <p>Haz click o presiona las materias que has aprobado; al aprobarlas, te mostrará cuáles puedes cursar en tu próximo semestre.</p>
-    <p>Las materias que no cumplen prerrequisitos estarán deshabilitadas y mostrarán qué materias debes aprobar primero.</p>
+    <p>También te muestra las materias que no puedes ver por prelaciones y las materias que necesitas aprobar para verlas.</p>
     <p>Elige tu mención (Politología, Relaciones Internacionales o Administración Pública) a partir del séptimo semestre y marca las materias correspondientes.</p>
   </div>
 
   <div class="main-container" id="main-container">
-    <!-- Diez semestres -->
+    <!-- Diez semestres en filas de 3 columnas -->
     <div class="vertical-column" id="col-sem1">
       <div class="column-block upper-block" id="sem1-block"></div>
     </div>
@@ -330,77 +331,54 @@
   </div>
 
   <script>
-    // Datos de la malla curricular semestral
-    // Cada materia: {id, nombre, uc, deps? (array de ids)}
-    // Para select dinámico de mención y carga
-
     const SEMESTRES = [
-      {
-        semestre: "Primer Semestre",
-        materias: [
+      { semestre: "Primer Semestre", materias: [
           { id: "1547", nombre: "Técnicas de Estudio I", uc: 3 },
           { id: "1548", nombre: "Introducción a las Ciencias Sociales", uc: 3 },
           { id: "1549", nombre: "Introducción a las Estructuras Históricas I", uc: 4 },
           { id: "0535", nombre: "Introducción al Derecho", uc: 4 },
           { id: "0529", nombre: "Introducción a la Economía", uc: 3 },
-        ]
-      },
-      {
-        semestre: "Segundo Semestre",
-        materias: [
+        ]},
+      { semestre: "Segundo Semestre", materias: [
           { id: "1553", nombre: "Técnicas de Estudio II", uc: 3, deps: ["1547"] },
           { id: "0528", nombre: "Introducción a la Teoría General de la Organización", uc: 3, deps: ["1548"] },
           { id: "0534", nombre: "Introducción a la Política", uc: 3, deps: ["1548"] },
           { id: "1554", nombre: "Introducción a las Estructuras Históricas II", uc: 4, deps: ["1549"] },
           { id: "1552", nombre: "Introducción al Estudio del Estado", uc: 4, deps: ["0535"] },
           { id: "2647", nombre: "Economía I", uc: 3, deps: ["0529"] },
-        ]
-      },
-      {
-        semestre: "Tercer Semestre",
-        materias: [
+        ]},
+      { semestre: "Tercer Semestre", materias: [
           { id: "1546", nombre: "Estadística", uc: 3, deps: ["1553"] },
           { id: "2645a", nombre: "Sociología I", uc: 3, deps: ["1548"] },
           { id: "2645b", nombre: "Teoría General de la Organización I", uc: 3, deps: ["0528"] },
           { id: "2644", nombre: "Teoría Política I", uc: 6, deps: ["0534"] },
           { id: "1557", nombre: "Historia de las Formas Políticas Modernas", uc: 5, deps: ["1552"] },
-        ]
-      },
-      {
-        semestre: "Cuarto Semestre",
-        materias: [
+        ]},
+      { semestre: "Cuarto Semestre", materias: [
           { id: "0555", nombre: "Metodología de la Investigación Empírica", uc: 3, deps: ["1546","2645a"] },
           { id: "2642", nombre: "Teoría General de la Organización II", uc: 3, deps: ["2645b"] },
           { id: "2646", nombre: "Teoría Política II", uc: 4, deps: ["2644"] },
           { id: "1563", nombre: "Historia de las Ideas Políticas Modernas", uc: 5, deps: ["1557"] },
           { id: "1558", nombre: "Economía II", uc: 3, deps: ["2647"] },
-        ]
-      },
-      {
-        semestre: "Quinto Semestre",
-        materias: [
+        ]},
+      { semestre: "Quinto Semestre", materias: [
           { id: "2629", nombre: "Estadística Superior", uc: 3, deps: ["0555"] },
           { id: "1565", nombre: "Sociología II", uc: 3, deps: ["2645a"] },
           { id: "2973", nombre: "Estructura Internacionales I", uc: 4, deps: ["0534"] },
           { id: "2626", nombre: "Teoría Política III", uc: 4, deps: ["2646"] },
           { id: "0551", nombre: "Estructuras Político Constitucionales Comparadas", uc: 3, deps: ["1557","2646"] },
           { id: "curso-monografico", nombre: "Curso Monográfico", uc: 3 },
-        ]
-      },
-      {
-        semestre: "Sexto Semestre",
-        materias: [
+        ]},
+      { semestre: "Sexto Semestre", materias: [
           { id: "2581", nombre: "Matemática aplicada a la ciencia política", uc: 3, deps: ["2629"] },
           { id: "2974", nombre: "Estructuras Internacionales II", uc: 4, deps: ["2973"] },
           { id: "1569", nombre: "Sistema Político Venezolano", uc: 3, deps: ["2626","0551"] },
           { id: "0552", nombre: "Fundamentos de la Administración Pública", uc: 3, deps: ["1552"] },
           { id: "0554", nombre: "Historia de las Ideas y Movimientos Sociales Contemporáneos", uc: 3, deps: ["1554"] },
           { id: "seminario", nombre: "Seminario", uc: 3},
-        ]
-      },
+        ]},
     ];
 
-    // Menciones séptimo semestre en adelante (las tres opciones)
     const MENCIONES = {
       politologia: {
         nombre: "Politología",
@@ -419,7 +397,6 @@
         sem10: [
           { id: "2583", nombre: "Economía III", uc: 3, deps: ["1558"] },
           { id: "1567", nombre: "Psicología Social", uc: 3, deps: ["1565"] },
-          //Además cursos monográficos, seminarios, electivas indicados abajo
         ],
         monograficos: 11,
         seminarios: 5,
@@ -480,14 +457,10 @@
     const ESPECIALES = [
       { id: "curso-monografico", nombre: "Curso Monográfico", uc: 3 },
       { id: "seminario", nombre: "Seminario", uc: 3 },
-      { id: "monograficos", nombre: "Cursos Monográficos Pendientes", uc: 0, necesitaCreditos: 0 }, // Estado indicativo
-      { id: "seminarios", nombre: "Seminarios Pendientes", uc: 0, necesitaCreditos: 0 }, // Estado indicativo
-      { id: "electivas", nombre: "Créditos Electivos Pendientes", uc: 0, necesitaCreditos: 0 }, // Estado indicativo
     ];
 
     const STORAGE_KEY = "eepa_semestres_aprobados";
 
-    // Funciones de manejo de localStorage
     function obtenerAprobadas() {
       try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -500,30 +473,25 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(aprobadas));
     }
 
-    // Buscar materia por id en la malla y menciones
     function getMateriaPorId(id) {
       for (const semestre of SEMESTRES) {
         const encontrada = semestre.materias.find(m => m.id === id);
         if (encontrada) return encontrada;
       }
-      // Buscar en menciones también
       for (const m of Object.values(MENCIONES)) {
         for (const key of ["sem7","sem8","sem9","sem10"]) {
           const encontrada = m[key].find(mat => mat.id === id);
           if (encontrada) return encontrada;
         }
       }
-      // Especiales
       return ESPECIALES.find(esp => esp.id === id) || null;
     }
 
-    // Verificar prerrequisitos no aprobados
     function requisitosNoAprobados(materia, aprobadas) {
       if (!materia.deps) return [];
       return materia.deps.filter(reqId => !aprobadas.includes(reqId));
     }
 
-    // Calcular créditos aprobados
     function calcCreditosAprobados(aprobadas) {
       let total = 0;
       aprobadas.forEach(id => {
@@ -533,7 +501,6 @@
       return total;
     }
 
-    // Crear botón materia
     function crearBotonMateria(materia) {
       const aprobadas = obtenerAprobadas();
       const reqsNoAprob = requisitosNoAprobados(materia, aprobadas);
@@ -567,36 +534,11 @@
       return btn;
     }
 
-    // Crear botones especiales informativos al final del séptimo semestre (ajustables según mención)
-    function crearBotonEspecial(esp) {
-      const aprobadas = obtenerAprobadas();
-      const totalCredAprob = calcCreditosAprobados(aprobadas);
-      const btn = document.createElement("button");
-      btn.className = "especial-btn";
-      btn.setAttribute("data-id", esp.id);
-      const nombreSpan = document.createElement("span");
-      nombreSpan.textContent = esp.nombre;
-      btn.appendChild(nombreSpan);
-      if (esp.uc && esp.uc > 0) {
-        const ucSpan = document.createElement("span");
-        ucSpan.className = "especial-uc-label";
-        ucSpan.textContent = `${esp.uc} UC`;
-        btn.appendChild(ucSpan);
-      }
-      btn.setAttribute("aria-pressed", "false");
-      btn.setAttribute("aria-disabled", "true"); // siempre deshabilitado, solo informativos
-      btn.tabIndex = -1;
-      return btn;
-    }
-
-    // Renderizar malla semestral básica
     function renderSemestres() {
-      // Limpiar columnas 1-6
-      ['sem1-block','sem2-block','sem3-block','sem4-block','sem5-block','sem6-block'].forEach(id =>{
+      ['sem1-block','sem2-block','sem3-block','sem4-block','sem5-block','sem6-block'].forEach(id => {
         document.getElementById(id).innerHTML = '';
       });
 
-      // Colocar título y materias en columnas 1 a 6
       for (let i = 0; i < SEMESTRES.length; i++) {
         const bloque = SEMESTRES[i];
         const cont = document.getElementById(`sem${i+1}-block`);
@@ -609,9 +551,7 @@
       }
     }
 
-    // Renderizar mención seleccionada (séptimo semestre en adelante)
     function renderMencion(mencion) {
-      // Ocultar todos los bloques de mención
       document.getElementById('col-sem7-politologia').style.display = 'none';
       document.getElementById('col-sem7-relint').style.display = 'none';
       document.getElementById('col-sem7-admin').style.display = 'none';
@@ -623,7 +563,6 @@
       const cont9 = document.getElementById('sem9-block');
       const cont10 = document.getElementById('sem10-block');
 
-      // Limpiar
       cont7Pol.innerHTML = '';
       cont7Rel.innerHTML = '';
       cont7Adm.innerHTML = '';
@@ -635,22 +574,18 @@
       const datosMencion = MENCIONES[mencion];
 
       if (!datosMencion) {
-        // ocultar columnas 8-10 también si no hay selección
         cont8.parentElement.style.display = 'none';
         cont9.parentElement.style.display = 'none';
         cont10.parentElement.style.display = 'none';
         return;
       }
 
-      // Mostrar columnas 8-10
       cont8.parentElement.style.display = 'block';
       cont9.parentElement.style.display = 'block';
       cont10.parentElement.style.display = 'block';
 
-      // Mostrar solo columna 7 de la mencion escogida
       if(mencion === 'politologia') {
         document.getElementById('col-sem7-politologia').style.display = 'flex';
-        // Título semestre 7
         cont7Pol.insertAdjacentHTML('beforeend', `<div class="col-title">Séptimo Semestre - Politología</div>`);
         datosMencion.sem7.forEach(m => cont7Pol.appendChild(crearBotonMateria(m)));
 
@@ -692,7 +627,6 @@
         datosMencion.sem10.forEach(m => cont10.appendChild(crearBotonMateria(m)));
       }
 
-      // Mostrar info especial al final décimo semestre
       if(cont10) {
         const infoDiv = document.createElement('div');
         infoDiv.className = 'info-col';
@@ -706,7 +640,6 @@
       }
     }
 
-    // Agregar o quitar aprobado
     function toggleAprobada(id) {
       let aprobadas = obtenerAprobadas();
       if (aprobadas.includes(id)) {
@@ -718,11 +651,9 @@
       renderMallaCompleta();
     }
 
-    // Render general
     function renderMallaCompleta() {
       renderSemestres();
 
-      // Leer mención seleccionada
       const radios = document.querySelectorAll('input[name="mencion"]');
       let mencionSeleccionada = null;
       radios.forEach(r => {
@@ -732,7 +663,6 @@
       if (mencionSeleccionada) {
         renderMencion(mencionSeleccionada);
       } else {
-        // Ocultar columnas 7-10 si no hay selección
         document.getElementById('col-sem7-politologia').style.display = 'none';
         document.getElementById('col-sem7-relint').style.display = 'none';
         document.getElementById('col-sem7-admin').style.display = 'none';
@@ -740,7 +670,6 @@
         document.getElementById('sem9-block').parentElement.style.display = 'none';
         document.getElementById('sem10-block').parentElement.style.display = 'none';
 
-        // Limpiar contenido
         ['sem7-politologia-block','sem7-relint-block','sem7-admin-block','sem8-block','sem9-block','sem10-block'].forEach(id => {
           const c = document.getElementById(id);
           if(c) c.innerHTML = '';
@@ -748,20 +677,16 @@
       }
     }
 
-    // Evento cambio mención
     document.querySelectorAll('input[name="mencion"]').forEach(radio => {
       radio.addEventListener('change', () => {
-        // Al cambiar la mención, re-renderizamos
         renderMallaCompleta();
       });
     });
 
-    // Botón regresar
     document.getElementById('btn-regresa').addEventListener('click', () => {
       window.location.href = 'https://sites.google.com/view/masestudiantilucv/inicio';
     });
 
-    // Eliminar progreso con Shift + doble click en body
     document.querySelector('body').addEventListener('dblclick', (e) => {
       if (e.shiftKey) {
         if (confirm('¿Seguro que deseas borrar todo el progreso guardado?')) {
@@ -771,11 +696,9 @@
       }
     });
 
-    // Inicializar
     window.addEventListener('DOMContentLoaded', () => {
       renderMallaCompleta();
     });
-
   </script>
 </body>
 </html>
